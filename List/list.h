@@ -6,29 +6,30 @@
 #define DATASTRUCTURE_LIST_H
 #include<bits/stdc++.h>
 using namespace std;
-struct Node;
-typedef int ElementType;
-typedef struct Node *PtrNode;
-typedef PtrNode List;
-typedef PtrNode Position;
 
-List makeEmpty(List L);
+struct Node;
+typedef struct Node* List;
+typedef List Position;
+typedef int ElementType;
+
 int isEmpty(List L);
-int isLast(List L);
+int isLast(Position P);
 Position find(ElementType x,List L);
-void Delete(ElementType x,List L);
 Position findPrevious(ElementType x,List L);
 void insert(ElementType x,Position P);
-void deleteList(List L);
-Position Header(List L);
-Position First(List L);
-Position Advance(List L);
-ElementType retrieve(Position P);
-List createList(vector<int>&);
+void Delete(ElementType x,List L);
+List createList(vector<int>& v);
 void printList(List L);
-
+void deleteList(List L);
+List reverse(List L);
 struct Node{
-    ElementType Element=-1;
-    struct Node *next= nullptr;
+    ElementType Element;
+    List next;
+    Node(){
+        Element = -1;
+        next = nullptr;
+    }
+    Node(ElementType x):Element(x){}
 };
+
 #endif //DATASTRUCTURE_LIST_H

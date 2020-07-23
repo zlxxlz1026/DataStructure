@@ -1,58 +1,54 @@
 //
-// Created by zhulixi on 2020/5/24.
+// Created by zhulixi on 2020/7/22.
 //
 
 #include "stack.h"
-#include<bits/stdc++.h>
-using namespace std;
-
-bool isEmpty(Stack S){
-    return S->Next== nullptr;
-}
 
 Stack createStack(){
     Stack S = new Node;
-    if(S!= nullptr){
-        S->Next = nullptr;
-    }
     return S;
 }
 
-void makeEmpty(Stack S){
-    if(S!= nullptr){
-        while(!isEmpty(S)){
-            pop(S);
-        }
+int isEmpty(Stack S){
+    if(S== nullptr){
+        cout<<"please bulid a stack"<<endl;
+        return -1;
     }
+    return S->next== nullptr;
 }
 
-void push(ElementType x,Stack S){
-    PtrNode tmp = new Node;
-    if(tmp== nullptr) {
-        cout << "not have enough memory" << endl;
-        return;
+void makeEmpty(Stack S){
+    if(S== nullptr) return;
+    while(!isEmpty(S)){
+        pop(S);
     }
-    tmp->Element = x;
-    tmp->Next = S->Next;
-    S->Next = tmp;
 }
 
 void pop(Stack S){
-    PtrNode tmp = new Node;
-    tmp = S->Next;
-    S->Next = tmp->Next;
+    if(isEmpty(S)){
+        cout<<"Stack is empty"<<endl;
+        return;
+    }
+    PtrNode tmp = S->next;
+    S->next = tmp->next;
     delete tmp;
 }
 
+void push(ElementType x,Stack S){
+    PtrNode tmp = new Node(x);
+    tmp->next = S->next;
+    S->next = tmp;
+}
+
 ElementType top(Stack S){
-    return S->Next->Element;
+    return S->next->Element;
 }
 
 void printStack(Stack S){
-    Stack tmp = S->Next;
-    while(tmp!= nullptr){
+    PtrNode tmp = S->next;
+    while(tmp!=nullptr){
         cout<<tmp->Element<<" ";
-        tmp = tmp->Next;
+        tmp = tmp->next;
     }
     cout<<endl;
 }

@@ -11,85 +11,84 @@ int isEmpty(List L){
 }
 
 int isLast(Position P){
-    return P->next== nullptr;
+    return P->next==nullptr;
 }
 
 Position find(ElementType x,List L){
-    if(L== nullptr) return nullptr;
-    Position P = L->next;
-    while(P!= nullptr&&P->Element!=x){
-        P = P->next;
+    Position tmp = L->next;
+    while(tmp!= nullptr&&tmp->Element!=x){
+        tmp = tmp->next;
     }
-    return P;
+    return tmp;
+}
+
+Position findPrevious(ElementType x,List L){
+    Position tmp = L;
+    while(tmp->next!= nullptr&&tmp->next->Element!=x){
+        tmp = tmp->next;
+    }
+    return tmp;
+}
+
+void insert(ElementType x,Position P){
+    auto tmp = new struct Node;
+    tmp->next = P->next;
+    tmp->Element = x;
+    P->next = tmp;
 }
 
 void Delete(ElementType x,List L){
-    Position P = findPrevious(x,L);
-    if(!isLast(P)){
-        Position tmp = P->next;
-        P->next = tmp->next;
+    Position p = findPrevious(x,L);
+    //表示没有找到要删除的元素
+    if(!isLast(p)){
+        Position tmp = p->next;
+        p->next = tmp->next;
         delete tmp;
     }
 }
 
-Position findPrevious(ElementType x,List L){
-    Position P = L->next;
-    while(P->next!= nullptr&&P->next->Element!=x){
-        P=P->next;
+void deleteList(List L){
+    Position p = L->next;
+    while(p!= nullptr){
+        Position tmp = p->next;
+        delete p;
+        p = tmp;
     }
+    L->next = nullptr;//如果不加这个L指向的还是原地址，内容随机
+}
+
+List reverse(List L){
+    Position pre = L->next;
+    Position cur = pre->next;
+    pre->next = nullptr;
+    while(cur!= nullptr){
+        Position tmp = cur->next;
+        cur->next = pre;
+        pre = cur;
+        cur = tmp;
+    }
+    Position P = new struct Node;
+    P->next = pre;
     return P;
 }
 
-void insert(ElementType x,Position P){
-    Position tmp;
-    Node *node = new Node;
-    if(node== nullptr)
-        cout<<"Not enough space"<<endl;
-    node->Element = x;
-    node->next = P->next;
-    P->next = node;
-}
-
-void deleteList(List L){
-    Position P = L->next;
-    Position tmp;
-    L->next = nullptr;
-    while(P!= nullptr){
-        tmp = P->next;
-        delete P;
-        P = tmp;
-    }
-}
-
-List makeEmpty(List L){
-    if(L== nullptr)
-        return L;
-    List tmp;
-    while(L->next!= nullptr){
-        tmp = L->next;
-        L->next = L->next->next;
-        delete(tmp);
-    }
-    return nullptr;
-}
-
 List createList(vector<int>& v){
-    List header = new Node;
-    List res = header;
+    List L = new struct Node;
+    List res = L;
     for(int i=0;i<v.size();++i){
-        Node *node =new Node;
-        node->Element = v[i];
-        header->next = node;
-        header = header->next;
+        Position tmp = new struct Node;
+        tmp->Element = v[i];
+        L->next = tmp;
+        L = L->next;
     }
     return res;
 }
 
 void printList(List L){
-    List tmp = L->next;
-    while(tmp!= nullptr){
-        cout<<tmp->Element<<" ";
-        tmp =tmp->next;
+    Position p = L->next;
+    while(p!=nullptr){
+        cout<<p->Element<<" ";
+        p = p->next;
     }
     cout<<endl;
 }

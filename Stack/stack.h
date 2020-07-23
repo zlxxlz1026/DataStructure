@@ -1,24 +1,31 @@
 //
-// Created by zhulixi on 2020/5/24.
+// Created by zhulixi on 2020/7/22.
 //
 
-#ifndef DATASTRUCTURE_STACK_H
-#define DATASTRUCTURE_STACK_H
+#ifndef DATA_STRUCTURE_STACK_H
+#define DATA_STRUCTURE_STACK_H
+#include<bits/stdc++.h>
+using namespace std;
 struct Node;
-typedef Node *PtrNode;
+typedef Node* PtrNode;
 typedef PtrNode Stack;
 typedef int ElementType;
 
-bool isEmpty(Stack S);
-Stack createStack(void );
+int isEmpty(Stack S);
+Stack createStack();
 void makeEmpty(Stack S);
 void push(ElementType x,Stack S);
-void pop(Stack S);
 ElementType top(Stack S);
+void pop(Stack S);
 void printStack(Stack S);
 
 struct Node{
     ElementType Element;
-    PtrNode Next= nullptr;
+    PtrNode next;
+    Node(){
+        Element = -1;
+        next = nullptr;
+    }
+    Node(ElementType x):Element(x),next(nullptr){}
 };
-#endif //DATASTRUCTURE_STACK_H
+#endif //DATA_STRUCTURE_STACK_H
