@@ -1,101 +1,87 @@
 //
-// Created by zhulixi on 2020/5/28.
+// Created by zhulixi on 2020/7/26.
 //
 
-#include "searchtree.h"
+#include "searchTree.h"
 
-SearchTreeNode* SearchTree::search(ElementType x, SearchTreeNode *&p) {
-    SearchTreeNode *tmp = root;
-    while(tmp){
-        p = tmp;
-        if(tmp->val==x)
-            return p;
-        else if(tmp->val>x)
-            tmp = tmp->lchild;
-        else
-            tmp = tmp->rchild;
-    }
-    return nullptr;
+//使用尾递归查找
+Position Find(ElementType x,SearchTree tree){
+    if(tree== nullptr) return nullptr;
+    if(tree->element==x) return tree;
+    else if(tree->element>x) return Find(x,tree->lchild);
+    else return Find(x,tree->rchild);
 }
 
-void SearchTree::insertSearchTree(ElementType x) {
-    SearchTreeNode *p = nullptr,*q = root;
-    if(search(x,p)== nullptr){
-        SearchTreeNode *tmp = new SearchTreeNode(x);
-        if(q== nullptr){
-            root=tmp;
-            return;
-        }
-        if(x<p->val)
-            p->lchild = tmp;
-        else
-            p->rchild = tmp;
+Position FindMin(SearchTree tree){
+    if(tree== nullptr) return nullptr;
+    while(tree->lchild!= nullptr){
+        tree = tree->lchild;
     }
+    return tree;
 }
 
-int SearchTree::deleteSearchTree(ElementType x) {
-    SearchTreeNode *p,*f,*q,*s;
-    p = root,f= nullptr;
-    while(p&&p->val!=x){
-        f = p;
-        if(p->val>x)
-            p = p->lchild;
-        else
-            p = p->rchild;
+Position FindMax(SearchTree tree){
+    if(tree== nullptr) return nullptr;
+    while(tree->rchild!= nullptr){
+        tree = tree->rchild;
     }
-    if(p== nullptr)
-        return 0;
-    if(p->lchild== nullptr){
-        if(f== nullptr)
-            root = p->rchild;
-        else if(f->lchild==p)
-            f->lchild = p->rchild;
-        else
-            f->rchild = p->rchild;
-        delete p;
+    return tree;
+}
+//BST的递归插入
+SearchTree insertNode(ElementType x,SearchTree tree){
+    if(tree== nullptr){
+        tree = new TreeNode(x);
+        return tree;
     }
-    else if(p->rchild== nullptr){
-        if(f== nullptr)
-            root=p->lchild;
-        else if(f->lchild==p)
-            f->lchild = p->lchild;
-        else
-            f->rchild = p->lchild;
-        delete p;
+    else if(x<tree->element){
+        tree->lchild = insertNode(x,tree->lchild);
     }
+    else if(x>tree->element){
+        tree->rchild = insertNode(x,tree->rchild);
+    }
+    return tree;
+}
+//递归删除
+SearchTree deleteNode(ElementType x,SearchTree tree){
+    if(tree== nullptr){
+        cout<<"cant find the tree"<<endl;
+        return nullptr;
+    }
+    if(x<tree->element) tree->lchild = deleteNode(x,tree->lchild);
+    else if(x>tree->element) tree->rchild = deleteNode(x,tree->rchild);
     else{
-        q = p;
-        s = p->lchild;//寻找左子树得最右下结点
-        while(s->rchild){
-            q = s;
-            s = s->rchild;
+        if(tree->rchild&&tree->lchild){
+            //有两个孩子的话可以选择左子树的最大值或者右子树的最小值，这里找右子树的最小值
+            SearchTree tmp = FindMin(tree->rchild);
+            tree->element = tmp->element;
+            tree->rchild = deleteNode(tree->element,tree->rchild);
         }
-        if(q==p)
-            q->lchild = s->lchild;
-        else
-            q->rchild = s->lchild;
-        p->val = s->val;
-        delete s;
+        else{
+            SearchTree tmp = tree;
+            if(tree->lchild == nullptr) {
+                tree = tree->rchild;
+            }
+            else if(tree->rchild == nullptr){
+                tree = tree->lchild;
+            }
+            delete tmp;
+        }
     }
-    return 1;
+    return tree;
 }
 
-void SearchTree::levelOrder() {
-    if(root== nullptr) return;
-    queue<SearchTreeNode*>myqueue;
-    myqueue.push(root);
-    while(!myqueue.empty()){
-        SearchTreeNode* tmp = myqueue.front();
-        cout<<tmp->val<<" ";
-        myqueue.pop();
-        if(tmp->lchild)
-            myqueue.push(tmp->lchild);
-        if(tmp->rchild)
-            myqueue.push(tmp->rchild);
+void levelOrder(SearchTree tree){
+    if(tree==nullptr){
+        cout<<"the tree not exist"<<endl;
+    }
+    queue<SearchTree> q;
+    q.push(tree);
+    while(!q.empty()){
+        SearchTree tmp = q.front();
+        q.pop();
+        cout<<tmp->element<<" ";
+        if(tmp->lchild) q.push(tmp->lchild);
+        if(tmp->rchild) q.push(tmp->rchild);
     }
     cout<<endl;
-}
-
-bool SearchTree::isEmpty() {
-    return root== nullptr;
 }
